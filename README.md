@@ -1,4 +1,4 @@
-# NonDecimal-Fractions-Period-Java
+# Non-Decimal-Fractions-Java
 This program finds the length of period of non-decimal fraction in Java.
 Intellij IDEA Community Edition 14.1.5 project
 
