@@ -1,5 +1,5 @@
 # NonDecimal-Fractions-Period-Java
-Thins program finds the length of period of non-decimal fraction in Java.
+This program finds the length of period of non-decimal fraction in Java.
 Intellij IDEA Community Edition 14.1.5 project
 
 Задача
@@ -19,8 +19,8 @@ Intellij IDEA Community Edition 14.1.5 project
     
 Как пользоваться программой
 
-Доступно 2 способа ввода данных:
-
+    Доступно 2 способа ввода данных:
+    
     1. В качестве аргументов командной строки.
         а. java com.none.Main fractions.txt
             где fractions.txt - имя файла с исходными данными для расчётов
