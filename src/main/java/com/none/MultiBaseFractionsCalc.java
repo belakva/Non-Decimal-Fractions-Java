@@ -137,9 +137,19 @@ public class MultiBaseFractionsCalc {
                 BigInteger E = denominator.divide(D);
                 final int fixedPartLength =
                         buildTerminatingStringOfPostPointDigitsInBase(ONE, D, base).length();
-                final String postPoint =
-                        buildRecurringStringOfPostPointDigitsInBase(numerator, denominator, base, fixedPartLength,
-                                lengthOfPeriodForDenominatorInBase(E, base));
+
+                String postPoint;
+
+                if (fixedPartLength >= precision) {
+
+                    postPoint = buildTerminatingStringOfPostPointDigitsInBase(numerator, denominator, base);
+
+                } else {
+
+                    postPoint =
+                            buildRecurringStringOfPostPointDigitsInBase(numerator, denominator, base, fixedPartLength,
+                                    lengthOfPeriodForDenominatorInBase(E, base));
+                }
 
                 if (postPoint.equals(ROUND_UP_TO_WHOLE_FLAG)) {
 
@@ -230,10 +240,8 @@ public class MultiBaseFractionsCalc {
             }
         }
 
-
         digitsBeyondPrecisionCount -= trailingZeroesCounter;
         fractionStringBuilder.setLength(fractionStringBuilder.length() - trailingZeroesCounter);
-
 
         if (digitsBeyondPrecisionCount > 0) {
             if (roundUp) {
@@ -299,9 +307,6 @@ public class MultiBaseFractionsCalc {
         StringBuilder fractionStringBuilder = new StringBuilder();
 
         // Непериодическая часть
-        int digitsBeyondPrecisionCount = 0;
-        int trailingZeroesCounter = 0;
-        boolean roundUp = false;
         int i;
 
         if (fixedPartLength > 0) {
@@ -309,70 +314,12 @@ public class MultiBaseFractionsCalc {
                 int charPos = fraction.toBigInteger().mod(bigIntegerBase).intValue();
                 fractionStringBuilder.append(CHARSET.charAt(charPos));
                 fraction = fraction.multiply(bigDecimalBase);
-
-                if (charPos == 0) {
-                    trailingZeroesCounter++;
-                } else {
-                    trailingZeroesCounter = 0;
-                }
-
-                if (i + 1 > precision) {
-                    digitsBeyondPrecisionCount++;
-                    if (charPos >= base / 2) roundUp = true;
-                    break;
-                }
-            }
-
-
-            digitsBeyondPrecisionCount -= trailingZeroesCounter;
-            fractionStringBuilder.setLength(fractionStringBuilder.length() - trailingZeroesCounter);
-
-            if (fixedPartLength == precision) {
-                return fractionStringBuilder.toString();
-            } else if (fixedPartLength > precision) {
-
-                if (roundUp) {
-
-                    StringBuilder roundedUpFractionInBase = new StringBuilder(buildRoundedUpFractionInBase(base, fractionStringBuilder.toString()));
-
-                    if (roundedUpFractionInBase.length() < fractionStringBuilder.length()) {
-                        fractionStringBuilder.setLength(fractionStringBuilder.length() - roundedUpFractionInBase.length());
-
-                        for (i = roundedUpFractionInBase.length() - 1; i > -1; i--) {
-                            if (roundedUpFractionInBase.substring(i, i).equals("0")) {
-                                roundedUpFractionInBase.setLength(roundedUpFractionInBase.length() - 1);
-                            } else {
-                                break;
-                            }
-                        }
-
-                        fractionStringBuilder.append(roundedUpFractionInBase);
-
-                    } else {
-                        // Вся часть дроби после точки сократилась.
-                        return ROUND_UP_TO_WHOLE_FLAG;
-                    }
-
-                } else {
-                    fractionStringBuilder.setLength(fractionStringBuilder.length() - digitsBeyondPrecisionCount);
-
-                }
-
-                return fractionStringBuilder.toString();
             }
         }
-
-
-        // Так как теперь отсутсвует вероятность округления дроби вверх, возвратим ответ, если установленная точность == 0
-
-        if (precision == 0)  {
-            return fractionStringBuilder.toString();
-        }
-
 
         // Периодическая часть
 
-        trailingZeroesCounter = 0;
+        int trailingZeroesCounter = 0;
         fractionStringBuilder.append("(");
 
         if (fixedPartLength + periodLength <= precision) {
@@ -380,7 +327,6 @@ public class MultiBaseFractionsCalc {
                 int charPos = fraction.toBigInteger().mod(bigIntegerBase).intValue();
                 fractionStringBuilder.append(CHARSET.charAt(charPos));
                 fraction = fraction.multiply(bigDecimalBase);
-
 
                 if (charPos == 0) {
                     trailingZeroesCounter++;
@@ -405,7 +351,7 @@ public class MultiBaseFractionsCalc {
         } else {
 
             int digitsCount = fixedPartLength;
-            digitsBeyondPrecisionCount = 0;
+            int digitsBeyondPrecisionCount = 0;
 
             // Отнимаем ту единицу от длины периода, которая служила указателем на то, что его
             // длина превысила допустимую точность.
@@ -448,7 +394,6 @@ public class MultiBaseFractionsCalc {
                         append("Period length exceeds the maximum precision of calculations, which is set to ").
                         append(precision).append(" digits.");
             }
-
 
         }
 
