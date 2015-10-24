@@ -24,7 +24,7 @@ public class MultiBaseFractionsCalc {
         this.precision = precision;
     }
 
-    public String findPeriodForFractionInBase(FractionWithBase f) {
+    public String findPeriodForFractionInBase(final FractionWithBase f) {
 
         int base = f.getBase();
         BigInteger numerator = f.getNumeratorBigInt();

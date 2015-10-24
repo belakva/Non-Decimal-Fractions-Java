@@ -17,8 +17,6 @@ public class FractionWithBaseTest {
         BigInteger expectedNumerator = new BigInteger("1334");
         BigInteger expectedDenominator = new BigInteger("520");
 
-        System.out.print(fr.getDenominatorBigInt());
-
         assertEquals(expectedNumerator, fr.getNumeratorBigInt());
         assertEquals(expectedDenominator, fr.getDenominatorBigInt());
 
